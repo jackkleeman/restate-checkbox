@@ -7,6 +7,7 @@ import {
   QueryClientProvider,
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import {
@@ -62,6 +63,8 @@ const DisplayBoxes = () => {
     {
       newCheckboxRange: InfiniteData<CheckboxRange>;
       previousCheckboxRange: InfiniteData<CheckboxRange>;
+      newCount: number;
+      previousCount: number;
     }
   >({
     mutationFn: async ({ lower, id, checked }): Promise<void> => {
@@ -82,6 +85,7 @@ const DisplayBoxes = () => {
       const previousCheckboxRange = queryClient.getQueryData<
         InfiniteData<CheckboxRange>
       >(["checkboxRange"])!;
+      const previousCount = queryClient.getQueryData<number>(["count"])!;
 
       const newCheckboxRange: InfiniteData<CheckboxRange> = {
         pageParams: previousCheckboxRange.pageParams,
@@ -94,14 +98,22 @@ const DisplayBoxes = () => {
       };
       newCheckboxRange.pages[pageI].boxes[id] = checked;
 
+      const newCount = previousCount + (checked ? 1 : -1);
+
       // Optimistically update to the new value
       queryClient.setQueryData<InfiniteData<CheckboxRange>>(
         ["checkboxRange"],
         newCheckboxRange,
       );
+      queryClient.setQueryData<number>(["count"], newCount);
 
-      // Return a context with the previous and new todo
-      return { previousCheckboxRange, newCheckboxRange };
+      // Return a context with the previous and new
+      return {
+        previousCheckboxRange,
+        newCheckboxRange,
+        previousCount,
+        newCount,
+      };
     },
     // If the mutation fails, use the context we returned above
     onError: (_error, _vars, context) => {
@@ -112,12 +124,16 @@ const DisplayBoxes = () => {
         ["checkboxRange"],
         context.previousCheckboxRange,
       );
+      queryClient.setQueryData(["count"], context.previousCount);
     },
     // Always refetch after error or success:
     onSettled: (newCheckboxRange) => {
       if (newCheckboxRange) {
         queryClient.invalidateQueries({
           queryKey: ["checkboxRange"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["count"],
         });
       }
     },
@@ -159,6 +175,20 @@ const DisplayBoxes = () => {
     getNextPageParam: (lastPage) => lastPage.lower + rangeSize,
     getPreviousPageParam: (nextPage) =>
       nextPage.lower > 0 ? nextPage.lower - rangeSize : null,
+  });
+
+  const {
+    data: countData,
+    error: countError,
+    isPending: countIsPending,
+    status: countStatus,
+  } = useQuery<number, Error, number, [string]>({
+    refetchInterval: 1000,
+    queryKey: ["count"],
+    queryFn: async (context) => {
+      const result = await axios.get<number>(`/api/count`);
+      return result.data;
+    },
   });
 
   const scrollingRef = useRef<number>();
@@ -262,6 +292,14 @@ const DisplayBoxes = () => {
     <p>Error: {error.message}</p>
   ) : (
     <>
+      <div style={{ zIndex: -999 }}>
+        Count:{" "}
+        {countIsPending
+          ? "Loading"
+          : countStatus === "error"
+            ? `Error: ${countError.message}`
+            : countData}
+      </div>
       <div
         style={{
           height: `${rowVirtualizer.getTotalSize()}px`,
