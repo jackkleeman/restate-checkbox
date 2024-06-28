@@ -294,11 +294,19 @@ const DisplayBoxes = () => {
     <>
       <div style={{ zIndex: -999 }}>
         Count:{" "}
-        {countIsPending
-          ? "Loading"
-          : countStatus === "error"
-            ? `Error: ${countError.message}`
-            : countData}
+        <b>
+          {countIsPending
+            ? "Loading"
+            : countStatus === "error"
+              ? `Error: ${countError.message}`
+              : countData}
+        </b>
+        . The backend for this is{" "}
+        <a href="https://github.com/jackkleeman/restate-checkbox/blob/main/object/checkboxRange.ts">
+          81 lines
+        </a>{" "}
+        and runs on top of the <a href="https://restate.dev/">Restate</a> Cloud
+        free tier.
       </div>
       <div
         style={{
