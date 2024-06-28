@@ -80,6 +80,9 @@ const DisplayBoxes = () => {
       await queryClient.cancelQueries({
         queryKey: ["checkboxRange"],
       });
+      await queryClient.cancelQueries({
+        queryKey: ["count"],
+      });
 
       // Snapshot the previous value
       const previousCheckboxRange = queryClient.getQueryData<
