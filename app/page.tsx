@@ -306,10 +306,9 @@ const DisplayBoxes = () => {
         </b>
         . The backend for this is{" "}
         <a href="https://github.com/jackkleeman/restate-checkbox/blob/main/object/checkboxRange.ts">
-          81 lines
+          71 lines
         </a>{" "}
-        and runs on top of the <a href="https://restate.dev/">Restate</a> Cloud
-        free tier.
+        thanks to <a href="https://restate.dev/">Restate</a>.
       </div>
       <div
         style={{
