@@ -2,7 +2,3 @@ name = "checkbox"
 compatibility_date = "2024-05-13"
 compatibility_flags = [ "nodejs_compat" ]
 pages_build_output_dir = ".vercel/output/static"
-
-[vars]
-AUTH_TOKEN = ""
-RESTATE_INGRESS = "http://localhost:8080"
