@@ -1,0 +1,4 @@
+name = "checkbox-virtual-object"
+main = "checkboxRange.ts"
+compatibility_date = "2024-05-13"
+compatibility_flags = [ "nodejs_compat" ]
