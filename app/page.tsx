@@ -75,7 +75,7 @@ const DisplayBoxes = () => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({
-        queryKey: ["checkboxRange", lower],
+        queryKey: ["checkboxRange"],
       });
 
       // Snapshot the previous value
@@ -270,7 +270,6 @@ const DisplayBoxes = () => {
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const isLoaderRow = virtualRow.index > allRowCount - 1;
           const lower =
             Math.floor((virtualRow.index * boxCount) / rangeSize) * 512;
           const pageI = data.pageParams.indexOf(lower);

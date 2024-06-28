@@ -2,7 +2,7 @@ import * as restate from "@restatedev/restate-sdk/fetch";
 
 const rangeSize = 512;
 
-const get = async (ctx: restate.ObjectSharedContext) => {
+const get = async (ctx: restate.ObjectContext) => {
   const bitmap = (await ctx.get<string>("bitmap")) ?? "0";
   return bitmap;
 };

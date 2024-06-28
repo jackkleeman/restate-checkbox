@@ -2,6 +2,6 @@
 // by running `wrangler types --env-interface CloudflareEnv env.d.ts`
 
 interface CloudflareEnv {
-	AUTH_TOKEN: "";
-	RESTATE_INGRESS: "http://localhost:8080";
+  AUTH_TOKEN?: string;
+  RESTATE_INGRESS?: string;
 }

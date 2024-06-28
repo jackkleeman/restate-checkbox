@@ -13,17 +13,20 @@ export async function POST(
     checked: boolean;
   }>();
   const ctx = getRequestContext();
-  return fetch(`${ctx.env.RESTATE_INGRESS}/checkboxRange/${lower}/set/send`, {
-    method: "POST",
-    body: JSON.stringify({
-      id,
-      checked,
-    }),
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${ctx.env.AUTH_TOKEN}`,
+  return fetch(
+    `${ctx.env.RESTATE_INGRESS ?? "http://localhost:8080"}/checkboxRange/${lower}/set`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+        checked,
+      }),
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${ctx.env.AUTH_TOKEN ?? ""}`,
+      },
     },
-  });
+  );
 }
 
 export async function GET(
@@ -32,9 +35,12 @@ export async function GET(
 ) {
   const ctx = getRequestContext();
   const { lower } = params;
-  return fetch(`${ctx.env.RESTATE_INGRESS}/checkboxRange/${lower}/get`, {
-    headers: {
-      authorization: `Bearer ${ctx.env.AUTH_TOKEN}`,
+  return fetch(
+    `${ctx.env.RESTATE_INGRESS ?? "http://localhost:8080"}/checkboxRange/${lower}/get`,
+    {
+      headers: {
+        authorization: `Bearer ${ctx.env.AUTH_TOKEN ?? ""}`,
+      },
     },
-  });
+  );
 }
